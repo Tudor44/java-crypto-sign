@@ -1,0 +1,10 @@
+target
+bin
+.DS_Store
+*.war
+*.iml
+.idea
+.settings
+.classpath
+.project
+WebContent/WEB-INF/web.xml
