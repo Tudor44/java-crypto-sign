@@ -1,10 +1,9 @@
 package it.gaetano.sign;
 
-import it.gaetano.sign.XmlVerifySignature;
-import org.w3c.dom.NodeList;
-
 import java.io.File;
 import java.io.FileNotFoundException;
+
+import org.w3c.dom.NodeList;
 
 public class TestSign {
 
