@@ -1,10 +1,17 @@
 package it.gaetano.crypto;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
 
 public class CryptoUtility {
 	
@@ -44,5 +51,47 @@ public class CryptoUtility {
 			cryptoUtility = new CryptoUtility();
 		return cryptoUtility;
 	}
+	
+	public byte[] signFile(PrivateKey privateKey,File inputFile) throws InvalidKeyException, NoSuchAlgorithmException, SignatureException, IOException {
+		Signature signature = Signature.getInstance("SHA256withRSA");
+		signature.initSign(privateKey);
+		InputStream in = null;
+		
+		try {
+		    in = new FileInputStream(inputFile);
+		    byte[] buf = new byte[2048];
+		    int len;
+		    while ((len = in.read(buf)) != -1) {
+		    	signature.update(buf, 0, len);
+		    }
+		} 
+		finally {
+		    if ( in != null ) in.close();
+		}
+		
+		return signature.sign();
+		
+	}
+	
+	public void verifyFile(PublicKey publicKey, File inputFile, byte[] signInBytes) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, IOException {
+		Signature signature = Signature.getInstance("SHA256withRSA");
+		signature.initVerify(publicKey);
+		InputStream in = null;
+		try {
+		    in = new FileInputStream(inputFile);
+		    byte[] buf = new byte[2048];
+		    int len;
+		    while ((len = in.read(buf)) != -1) {
+		    	signature.update(buf, 0, len);
+		    }
+		} 
+		finally {
+		    if ( in != null ) in.close();
+		}
+		System.out.println("The signature of file: "+inputFile.getName() + (signature.verify(signInBytes) ? " is valid" : " is invalid"));
+
+	}
+	
+	
 	
 }
