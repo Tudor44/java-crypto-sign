@@ -10,6 +10,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
 
@@ -25,8 +26,9 @@ public class CryptoUtility {
 	
 	protected KeyPair getOrGenerateKeyPair(int length, String algorithm) throws NoSuchAlgorithmException {
 		if(this.kpg==null) {
+			SecureRandom rand = new SecureRandom();
 			kpg = KeyPairGenerator.getInstance(algorithm);
-			kpg.initialize(length);
+			kpg.initialize(length, rand);
 			this.kp = kpg.generateKeyPair();
 		}
 		else
